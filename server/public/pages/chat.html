@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+<meta name="viewport" content="width=device-width, user-scalable=no">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 70%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      .name{ width:15%;}
+      .send{ width:10%;}
+      #chatLog { list-style-type: none; margin: 0; padding: 0; }
+      #chatLog li { padding: 5px 10px; }
+      #chatLog li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <ul id="chatLog" readonly ></ul>
+    <form id="chat" action="">
+      <input class="name" id="name" type="text" readonly /></input>
+      <input id="msg" autocomplete="off" />
+      <input type="submit" value="Send" class="send" ></input>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+console.log("hi");
+$('#chat').on('submit',function(e){
+  socket.emit('sendmessage' , $('#name').val(),  $('#msg').val());
+  $('#msg').val("");
+  e.preventDefault();
+});
+socket.on('receivemessage', function(msg){
+  console.log(msg);
+  $('#chatLog').append($('<li>').text(msg));
+//  $('#chatLog').append(msg + "<br>");
+  $('#chatLog').scrollTop( $('#chatLog').innerHeight() );
+
+});
+socket.on('change name', function(name){
+  $('#name').val(name);
+});
+    </script>
+  </body>
+</html>
